@@ -7,13 +7,6 @@ public class Kauppa {
     private Ostoskori ostoskori;
     private InViitegeneraattori viitegeneraattori;
     private String kaupanTili;
-
-    public Kauppa() {
-        varasto = Varasto.getInstance();
-        pankki = Pankki.getInstance();
-        viitegeneraattori = Viitegeneraattori.getInstance();
-        kaupanTili = "33333-44455";
-    }
     
     public Kauppa(InVarasto varasto, InPankki pankki, InViitegeneraattori viite) {
         this.varasto = varasto;
