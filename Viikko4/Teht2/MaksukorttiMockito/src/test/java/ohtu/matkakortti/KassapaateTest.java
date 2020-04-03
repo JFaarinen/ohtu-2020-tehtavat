@@ -26,6 +26,7 @@ public class KassapaateTest {
     @Test
     public void kortiltaVelotetaanHintaJosRahaaOn() {
         when(kortti.getSaldo()).thenReturn(10);
+        
         kassa.ostaLounas(kortti);
         
         verify(kortti, times(1)).getSaldo();
@@ -35,10 +36,28 @@ public class KassapaateTest {
     @Test
     public void kortiltaEiVelotetaJosRahaEiRiita() {
         when(kortti.getSaldo()).thenReturn(4);
+        
         kassa.ostaLounas(kortti);
         
         verify(kortti, times(1)).getSaldo();
         verify(kortti, times(0)).osta(anyInt());
+    }
+    
+    @Test
+    public void kortilleLadataanJosSummaPositiivinen() {
+        
+        kassa.lataa(kortti, 1);
+        
+        verify(kortti, times(1)).lataa(eq(1));
+        
+    }
+    
+    @Test
+    public void kortilleEiLadataJosSummaNegatiivinen() {
+        
+        kassa.lataa(kortti, -1);
+        
+        verify(kortti, times(0)).lataa(anyInt());
     }
       
 }
