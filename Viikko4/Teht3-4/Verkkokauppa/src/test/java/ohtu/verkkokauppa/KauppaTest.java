@@ -106,4 +106,60 @@ public class KauppaTest {
         
         verify(pankki).tilisiirto(eq("pikkarainen"), anyInt(), eq("54321"), anyString(), eq(5));
     }
+    
+    @Test
+    public void uusiOstostapahtumaTyhjentaaOstoskorin() {
+        when(viite.uusi()).thenReturn(42);
+        when(varasto.saldo(1)).thenReturn(10);
+        when(varasto.saldo(2)).thenReturn(10);
+        when(varasto.haeTuote(1)).thenReturn(new Tuote(1, "maito", 5));
+        when(varasto.haeTuote(2)).thenReturn(new Tuote(2, "juusto", 4));
+        
+        //shoppaillaan
+        k.aloitaAsiointi();
+        k.lisaaKoriin(1);
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        k.tilimaksu("pikkarainen", "54321");
+        
+        verify(pankki).tilisiirto(eq("pikkarainen"), anyInt(), eq("54321"), anyString(), eq(4));
+        
+    }
+    
+    @Test
+    public void uusiViiteJokaiseenMaksuun() {
+        when(varasto.saldo(1)).thenReturn(10);
+        when(varasto.saldo(2)).thenReturn(10);
+        when(varasto.haeTuote(1)).thenReturn(new Tuote(1, "maito", 5));
+        when(varasto.haeTuote(2)).thenReturn(new Tuote(2, "juusto", 4));
+        
+        //shoppaillaan
+        k.aloitaAsiointi();
+        k.lisaaKoriin(1);
+        k.tilimaksu("pikkarainen", "54321");
+        
+        //tarkastetaan että viitenumeroa kutsuttu kerran
+        verify(viite, times(1)).uusi();
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        k.tilimaksu("pätkä", "112211");
+        verify(viite, times(2)).uusi();
+    }
+    
+    @Test
+    public void poistettuTuotePoistuuKorista() {
+        when(varasto.saldo(1)).thenReturn(10);
+        when(varasto.saldo(2)).thenReturn(10);
+        when(varasto.haeTuote(1)).thenReturn(new Tuote(1, "maito", 5));
+        when(varasto.haeTuote(2)).thenReturn(new Tuote(2, "juusto", 4));
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(1);
+        k.lisaaKoriin(2);
+        k.poistaKorista(1);
+        k.tilimaksu("justiina", "54321");
+        
+        verify(pankki).tilisiirto(eq("justiina"), anyInt(), eq("54321"), anyString(), eq(4));       
+    }
 }
