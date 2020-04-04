@@ -2,79 +2,57 @@ package ohtu;
 
 public class TennisGame {
     
-    private int m_score1 = 0;
-    private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+    Pelaaja p1;
+    Pelaaja p2;
 
     public TennisGame(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+        p1 = new Pelaaja(player1Name);
+        p2 = new Pelaaja(player2Name);
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            m_score1 += 1;
-        else
-            m_score2 += 1;
+        if (playerName.equals(p1.getNimi())) {
+            p1.lisaaPiste();
+        } else if (playerName.equals(p2.getNimi())) {
+            p2.lisaaPiste();
+        }
     }
 
     public String getScore() {
         String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                        score = "Love-All";
-                    break;
-                case 1:
-                        score = "Fifteen-All";
-                    break;
-                case 2:
-                        score = "Thirty-All";
-                    break;
-                case 3:
-                        score = "Forty-All";
-                    break;
-                default:
-                        score = "Deuce";
-                    break;
-                
-            }
+        if (p1.getPisteidenLkm()==p2.getPisteidenLkm()){
+            score = pisteytaTasatilanne(p1.getPisteidenLkm());
         }
-        else if (m_score1>=4 || m_score2>=4)
+        else if (p1.getPisteidenLkm()>=4 || p2.getPisteidenLkm()>=4)
         {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+            score = tarkistaVoittotilanne();
         }
         else
         {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
-            }
+            score = p1.pisteet() + "-" + p2.pisteet();
         }
         return score;
+    }
+    
+    public String pisteytaTasatilanne(int pisteet) {
+        String tulos;
+        if (pisteet == 0) {
+            tulos = "Love-All";
+        } else if (pisteet > 3) {
+            tulos = "Deuce";
+        } else {
+            tulos = p1.pisteet() + "-All";
+        }
+        return tulos;
+    }
+    
+    public String tarkistaVoittotilanne() {
+        String tulos="";
+        int pisteidenEro = p1.getPisteidenLkm()-p2.getPisteidenLkm();
+        if (pisteidenEro==1) tulos ="Advantage player1";
+        else if (pisteidenEro ==-1) tulos ="Advantage player2";
+        else if (pisteidenEro>=2) tulos = "Win for player1";
+        else tulos ="Win for player2";  
+        return tulos;
     }
 }
