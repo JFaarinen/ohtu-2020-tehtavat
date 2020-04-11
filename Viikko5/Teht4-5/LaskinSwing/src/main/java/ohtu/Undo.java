@@ -9,6 +9,18 @@ package ohtu;
  *
  * @author Juho
  */
-public class Undo {
+public class Undo extends Komento{
+    private int edellinenTila;
+    
+    public Undo(Sovelluslogiikka laskin, int edellinenTila) {
+        super(laskin);
+        this.edellinenTila = edellinenTila;
+    }
+
+    @Override
+    public void suorita() {
+        laskin.nollaa();
+        laskin.plus(edellinenTila);
+    }
     
 }

@@ -19,6 +19,7 @@ public class Komentotehdas {
     private JButton miinus;
     private JButton nollaa;
     private JButton undo;
+    private int edellinenTila;
     
     public Komentotehdas(Sovelluslogiikka laskin, JButton plus, JButton miinus, JButton nollaa, JButton undo) {
         this.laskin = laskin;
@@ -26,16 +27,23 @@ public class Komentotehdas {
         this.miinus = miinus;
         this.nollaa = nollaa;
         this.undo = undo;
+        edellinenTila = 0;
     }
     
-    public Komento hae(ActionEvent ae, int arvo) {
+    public Komento hae(ActionEvent ae, int arvo) {       
+        if (ae.getSource() == undo) {
+            return new Undo(laskin, edellinenTila);
+        }
+        
+        edellinenTila = laskin.tulos();
         if (ae.getSource() == plus) {
-            return new Summa(laskin, arvo);
-        } else if (ae.getSource() == miinus) {           
+            return new Summa(laskin, arvo);         
+        } else if (ae.getSource() == miinus) {
             return new Erotus(laskin, arvo);
         } else if (ae.getSource() == nollaa) {
             return new Nollaa(laskin);
         }
+
         return new Tuntematon();
     
     }

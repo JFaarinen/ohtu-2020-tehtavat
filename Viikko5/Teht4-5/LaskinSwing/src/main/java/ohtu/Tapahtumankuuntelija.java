@@ -32,7 +32,6 @@ public class Tapahtumankuuntelija implements ActionListener {
  
         try {
             arvo = Integer.parseInt(syotekentta.getText());
-            System.out.println("Arvo on " +arvo);
         } catch (Exception e) {
         }
  
