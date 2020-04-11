@@ -13,6 +13,7 @@ public class Tapahtumankuuntelija implements ActionListener {
     private JTextField tuloskentta;
     private JTextField syotekentta;
     private Sovelluslogiikka sovellus;
+    private Komentotehdas komentotehdas;
  
     public Tapahtumankuuntelija(JButton plus, JButton miinus, JButton nollaa, JButton undo, JTextField tuloskentta, JTextField syotekentta) {
         this.plus = plus;
@@ -22,6 +23,7 @@ public class Tapahtumankuuntelija implements ActionListener {
         this.tuloskentta = tuloskentta;
         this.syotekentta = syotekentta;
         this.sovellus = new Sovelluslogiikka();
+        this.komentotehdas = new Komentotehdas(sovellus, plus, miinus, nollaa, undo);
     }
     
     @Override
@@ -30,19 +32,11 @@ public class Tapahtumankuuntelija implements ActionListener {
  
         try {
             arvo = Integer.parseInt(syotekentta.getText());
+            System.out.println("Arvo on " +arvo);
         } catch (Exception e) {
         }
  
-        if (ae.getSource() == plus) {
-            sovellus.plus(arvo);
-        } else if (ae.getSource() == miinus) {
-            sovellus.miinus(arvo);
-        } else if (ae.getSource() == nollaa) {
-            sovellus.nollaa();
-        } else {
-            System.out.println("undo pressed");
-        }
-        
+        komentotehdas.hae(ae, arvo).suorita();      
         int laskunTulos = sovellus.tulos();
          
         syotekentta.setText("");
