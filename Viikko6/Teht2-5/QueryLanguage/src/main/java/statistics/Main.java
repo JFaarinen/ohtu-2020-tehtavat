@@ -65,5 +65,9 @@ public class Main {
             System.out.println(player);
         }
         
+        System.out.println("**********");
+        System.out.println("**********");
+               
+        
     }
 }
